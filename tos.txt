@@ -1,0 +1,39 @@
+Conditions d’Utilisation – Assistant Discord Personnel
+
+Dernière mise à jour : 12/07/2025
+En utilisant cet assistant Discord (« le Bot »), vous acceptez les conditions suivantes. Ce bot est un outil personnel, destiné uniquement à [moi/l’administrateur] et n’est pas conçu pour un usage public.
+
+1. Usage personnel
+Le Bot est destiné exclusivement à l’usage privé de l’administrateur. Il lit les messages des canaux configurés pour :
+- Capturer des notes ou liens
+- Répondre à des questions
+- Alimenter et interroger des bases de données personnelles
+
+2. Collecte et traitement des données
+Les messages des canaux sélectionnés peuvent être lus et stockés localement, y compris :
+- Le texte des messages
+- Les liens partagés (ex. Twitter)
+- Les métadonnées associées (date, auteur)
+- Les contenus multimédias associés (images, vidéos)
+
+Ces données sont traitées pour permettre :
+- L’indexation sémantique (via FAISS et encoders)
+- La recherche et la génération de réponses personnalisées
+
+Aucune donnée n’est revendue ou partagée intentionnellement avec des tiers.
+
+3. Stockage local
+Toutes les données collectées sont stockées sur le serveur local de l’administrateur et utilisées uniquement pour ses propres requêtes via l’API Flask.
+
+4. Limitations
+Le Bot ne garantit pas l’exactitude des réponses générées ni la disponibilité continue du service. L’administrateur est seul responsable de l’usage des résultats.
+
+5. Respect de la vie privée
+Bien que l’usage soit privé, l’administrateur doit veiller à ne pas collecter de données confidentielles d’autres utilisateurs sans leur consentement si jamais le Bot était ajouté à des serveurs multi-utilisateurs.
+
+6. Modification des Conditions
+Ces conditions peuvent être mises à jour à tout moment par l’administrateur pour refléter l’évolution du Bot ou de son usage.
+
+7. Contact
+Pour toute question, contactez : @Tristan_Starkl sur discord
+
