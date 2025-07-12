@@ -1,0 +1,56 @@
+Politique de Confidentialité – Assistant Discord Personnel
+
+Dernière mise à jour : 12/07/2025
+
+Cette Politique de Confidentialité explique comment les données collectées par mon assistant Discord (« le Bot ») sont utilisées et protégées.
+
+1. Collecte des données
+
+Le Bot peut collecter les types de données suivants lorsque vous postez dans les canaux surveillés :
+
+- Texte des messages
+- Liens partagés (par ex. vers des tweets ou articles)
+- Métadonnées (date, auteur du message)
+- Contenus multimédias associés (images, vidéos)
+
+Cette collecte est déclenchée uniquement sur les canaux explicitement configurés pour le Bot.
+
+2. Finalité de la collecte
+
+Les données collectées sont utilisées pour :
+
+- Indexer et organiser mes notes personnelles
+- Alimenter un système de recherche assistée par IA (RAG)
+- Me permettre d'interroger mes données via une interface locale (API Flask)
+
+Le Bot n'est pas destiné à collecter ou traiter des données pour des tiers.
+
+3. Stockage des données
+
+- Toutes les données collectées sont stockées localement sur mon propre serveur.
+- Aucun envoi intentionnel à des serveurs tiers (sauf appel aux APIs des modèles d’IA ou d’encodage, qui peuvent recevoir des requêtes ou extraits pour génération d'embeddings ou réponses).
+
+4. Partage des données
+
+- Les données ne sont pas revendues ni partagées avec des tiers.
+- Les appels éventuels vers des APIs externes (par ex. OpenAI) peuvent transmettre des requêtes ou extraits de texte, dans la limite nécessaire pour générer embeddings ou réponses.
+
+5. Durée de conservation
+
+Les données sont conservées jusqu'à ce que je décide de les supprimer. Je peux supprimer ou mettre à jour les enregistrements manuellement.
+
+6. Sécurité
+
+Je prends des mesures raisonnables pour sécuriser les données sur mon serveur local. Toutefois, aucune méthode de stockage ou de transmission n’est totalement sûre.
+
+7. Consentement et responsabilité
+
+L'usage de ce Bot est strictement privé et personnel. Si d'autres personnes postent dans des canaux surveillés, elles doivent être informées que leurs messages pourraient être lus et stockés. En tant qu'administrateur, je suis responsable de l'utilisation éthique du Bot.
+
+8. Modifications de cette politique
+
+Je peux mettre à jour cette politique à tout moment. La date de dernière mise à jour sera affichée en haut du document.
+
+9. Contact
+
+Pour toute question sur cette politique, veuillez me contacter à : @Tristan_Starkl sur discord.
