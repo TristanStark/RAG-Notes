@@ -8,7 +8,6 @@ import aiohttp
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-
 from twitter_extractor import TwitterScraper
 
 load_dotenv()
