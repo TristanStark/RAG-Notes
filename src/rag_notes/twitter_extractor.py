@@ -199,8 +199,7 @@ if __name__ == "__main__":
                 # Wait for any results
                 result = scraper.result_queue.get(timeout=5)
                 print(f"[RESULT] Result: {result}")
-                print(f"Images downloaded: {', '.join(result['images']) 
-                                                if result['images'] else 'None'}")
+                print(f"Images: {', '.join(result['images']) if result['images'] else 'None'}")
             except Empty:
                 pass  # No result yet
     except KeyboardInterrupt:
