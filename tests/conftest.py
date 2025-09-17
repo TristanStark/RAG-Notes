@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture(autouse=True)
 def env_defaults(tmp_path, monkeypatch):
     monkeypatch.setenv("IMAGES_FOLDER", str(tmp_path / "images"))

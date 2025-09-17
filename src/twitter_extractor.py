@@ -1,14 +1,18 @@
-import os
-import requests
-import threading
-from queue import Queue, Empty
-from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 import base64
-from playwright.sync_api import sync_playwright
+import os
+import threading
+from queue import Empty, Queue
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+
+import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
+
 
 class TwitterScraper:
-    def __init__(self, images_folder="H:\\github\\Les Reliques des Aînées Assistant\\Generic Assistant\\images2", poll_interval=5, max_retries=3):
+    def __init__(self, 
+                    images_folder="H:\\github\\RAG\\Generic Assistant\\images2",
+                         poll_interval=5, max_retries=3):
         self.images_folder = images_folder
         self.queue = Queue()
         self.result_queue = Queue()
@@ -52,9 +56,9 @@ class TwitterScraper:
         images = []
 
         # Extract tweet text
-        tweet_spans = soup.find_all(attrs={"data-testid": "tweetText"})
-        if tweet_spans:
-            tweet_text = " ".join([span.get_text(separator=" ", strip=True) for span in tweet_spans])
+        spans = soup.find_all(attrs={"data-testid": "tweetText"})
+        if spans:
+            tweet_text = " ".join([span.get_text(separator=" ", strip=True) for span in spans])
 
         # Extract images
         for img in soup.find_all("img"):
@@ -116,9 +120,6 @@ class TwitterScraper:
                 filenames.append(filename)
                 print(f"[RESULT] Image downloaded to: {local_path}")
 
-        # Example: insert into DB / FAISS
-        # agent.add_data_and_update_index(base_name="tweets", payload={"text": data["text"], "image_path": local_path})
-
         print(f"[RESULT] Processing complete for tweet: {tweet_url}")
         return True, local_image_paths, base64_images, filenames
 
@@ -132,7 +133,7 @@ class TwitterScraper:
                 tweet_url = self.queue.get(timeout=self.poll_interval)
                 print(f"[WORKING] Got tweet URL from queue: {tweet_url}")
 
-                success, local_image_paths, base64_images, filenames = self.process_tweet_url(tweet_url)
+                success, local, base64_images, filenames = self.process_tweet_url(tweet_url)
                 retries = self.retry_counts.get(tweet_url, 0)
 
                 if not success:
@@ -143,7 +144,7 @@ class TwitterScraper:
                         print(f"[WARNING] Requeuing tweet URL (attempt {retries}): {tweet_url}")
                         self.queue.put(tweet_url)
                     else:
-                        print(f"[ERROR] Max retries reached for tweet URL. Dropping: {tweet_url}")
+                        print(f"[ERROR] Max retries reached for URL. Dropping: {tweet_url}")
                 else:
                     if tweet_url in self.retry_counts:
                         del self.retry_counts[tweet_url]
@@ -153,10 +154,11 @@ class TwitterScraper:
                     "tweet_url": tweet_url,
                     "status": "success" if success else "failure",
                     "retries": retries,
-                    "images": local_image_paths,
+                    "images": local,
                     "base64_images": base64_images,
                     "filenames": filenames,
-                    "message": "Processed successfully" if success else f"Processing failed after {retries} attempt(s)"
+                    "message": "Processed successfully" if success else
+                         f"Processing failed after {retries} attempt(s)"
                 }
                 self.result_queue.put(result)
 
@@ -197,7 +199,8 @@ if __name__ == "__main__":
                 # Wait for any results
                 result = scraper.result_queue.get(timeout=5)
                 print(f"[RESULT] Result: {result}")
-                print(f"Images downloaded: {', '.join(result['images']) if result['images'] else 'None'}")
+                print(f"Images downloaded: {', '.join(result['images']) 
+                                                if result['images'] else 'None'}")
             except Empty:
                 pass  # No result yet
     except KeyboardInterrupt:

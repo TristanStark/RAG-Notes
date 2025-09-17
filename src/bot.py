@@ -1,14 +1,16 @@
-import discord
-import aiohttp
-import os
-from discord.ext import commands
 import asyncio
-from queue import Empty
-from twitter_extractor import TwitterScraper
-from uuid import uuid4
 import base64
+import os
+from queue import Empty
+from uuid import uuid4
 
+import aiohttp
+import discord
+from discord.ext import commands
 from dotenv import load_dotenv
+
+from twitter_extractor import TwitterScraper
+
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 TWITTER_BEARER_TOKEN = os.getenv("TWITTER_BEARER_TOKEN")
@@ -45,22 +47,22 @@ scraper.start()
 
 async def result_dispatcher():
 	await bot.wait_until_ready()
-	print("✅ Result dispatcher started.")
+	print("[OK] Result dispatcher started.")
 
 	while not bot.is_closed():
 		try:
 			result = scraper.result_queue.get(timeout=5)
-			print(f"🔔 New result: {result}")
+			print(f"[OK] New result: {result}")
 
 			if result['status'] == 'failure':
-				print(f"❌ Failed to process tweet {result['tweet_url']} after {result['retries']} retries.")
+				print(f"[ERROR] Failed {result['tweet_url']} after {result['retries']} retries.")
 				continue
 			else:
-				print(f"✅ Successfully processed tweet {result['tweet_url']}.")
+				print(f"[OK] Successfully processed tweet {result['tweet_url']}.")
 				images = result.get('images', [])
-				base64_images = result.get('base64_images', [])
+				b64_imgs = result.get('base64_images', [])
 				filenames = result.get('filenames', [])
-				for image, base64_image, filename in zip(images, base64_images, filenames):
+				for image, base64_image, filename in zip(images, b64_imgs, filenames, strict=False):
 					await add_data(filename, image, base64_image, db_name="image_embeddings")
 					#await reload_data("image_embeddings")
 
@@ -70,9 +72,9 @@ async def result_dispatcher():
 					if channel.id == CHANNEL_ID_LOGS:
 						try:
 							await channel.send(
-								f"🎯 Résultat pour Tweet : {result['status'].upper()} - {result['message']}")
+								f"Résultat pour: {result['status'].upper()} - {result['message']}")
 						except Exception as e:
-							print(f"❌ Could not send message in {channel}: {e}")
+							print(f"[ERROR] Could not send message in {channel}: {e}")
 
 		except Empty:
 			await asyncio.sleep(30)
@@ -92,7 +94,7 @@ async def reload_data(db_name):
 			if resp.status != 200:
 				print(f"Erreur API {resp.status}")
 			else:
-				print(f"✅ Données rechargées pour {db_name}")
+				print(f"[OK] Données rechargées pour {db_name}")
 
 
 async def add_data(author, content, timestamp, db_name="notes"):
@@ -121,7 +123,7 @@ async def add_data(author, content, timestamp, db_name="notes"):
 			if resp.status != 200:
 				print(f"Erreur API {resp.status}, message = {resp.reason}")
 			else:
-				print(f"✅ Message envoyé à l'API")
+				print("[OK] Message envoyé à l'API")
 
 # === EVENT HANDLER ===
 @bot.event
@@ -132,12 +134,13 @@ async def on_message(message):
 	if message.channel.id not in CHANNEL_ID_TO_WATCH and not message.content.startswith("!"):
 		return
 
-	if message.channel.id == CHANNEL_ID_IMAGES and ("twitter.com" in message.content or "x.com" in message.content):
+	is_tweet = "twitter.com" in message.content or "x.com" in message.content
+	if message.channel.id == CHANNEL_ID_IMAGES and is_tweet:
 		scraper.add_url(message.content)
 		await message.add_reaction("✅")
 	elif message.channel.id == CHANNEL_ID_NOTES:
 		# Log local
-		content = message.content.strip().replace("'", " ").replace('"', " ") 
+		content = message.content.strip().replace("'", " ").replace('"', " ")
 		# Appel à l'API
 		await add_data(
 			author=str(message.author),
@@ -146,7 +149,7 @@ async def on_message(message):
 		)
 	elif message.channel.id == CHANNEL_ID_QUERY:
 		# Log local
-		content = message.content.strip().replace("'", " ").replace('"', " ") 
+		content = message.content.strip().replace("'", " ").replace('"', " ")
 		payload = {
 			"question": content
 		}
@@ -157,7 +160,7 @@ async def on_message(message):
 					print(f"Erreur API {resp.status}, message = {resp.reason}")
 					await message.channel.send(f"❌ Erreur lors de la requête : {resp.reason}")
 				else:
-					print(f"✅ Message envoyé à l'API")
+					print("[OK] Message envoyé à l'API")
 					response = await resp.json()
 					image = response.get("image")
 					if image:
@@ -172,11 +175,11 @@ async def on_message(message):
 								img_file.write(base64.b64decode(img_path))
 							files.append(discord.File(img_path2))
 
-						await message.channel.send(content=f"📸 Images trouvées", files=files)
+						await message.channel.send(content="[RESP] Images trouvées", files=files)
 						for img_path in files_path:
 							os.remove(img_path)
 					else:
-						await message.channel.send(f"🔍 Résultat de la requête : {response['result']}")
+						await message.channel.send(f"""[INFO] Résultat: {response['result']}""")
 	await bot.process_commands(message)
 
 
@@ -187,11 +190,11 @@ async def reload(ctx, db_name: str):
 	Usage: !reload <db_name>
 	"""
 	if ctx.channel.id != CHANNEL_ID_LOGS:
-		await ctx.send("❌ Cette commande ne peut être utilisée que dans le channel de logs.")
+		await ctx.send("[ERROR] Cette commande ne peut être utilisée que dans le channel de logs.")
 		return
 
 	await reload_data(db_name)
-	await ctx.send(f"✅ Données rechargées pour {db_name}.")
+	await ctx.send(f"[OK] Données rechargées pour {db_name}.")
 
 
 @bot.command(name="batch")
@@ -201,10 +204,10 @@ async def batch(ctx):
 	Usage: !batch
 	"""
 	if ctx.channel.id != CHANNEL_ID_LOGS:
-		await ctx.send("❌ Cette commande ne peut être utilisée que dans le channel de logs.")
+		await ctx.send("[ERROR] Cette commande ne peut être utilisée que dans le channel de logs.")
 		return
 
-	await ctx.send("🔄 Traitement des tweets en cours...")
+	await ctx.send("[RELOAD] Traitement des tweets en cours...")
 	for guild in bot.guilds:
 		for channel in guild.text_channels:
 			if client.user in channel.members or channel.permissions_for(guild.me).read_messages:
@@ -217,7 +220,7 @@ async def batch(ctx):
 						scraper.add_url(message.content)
 					else:
 						# Log local
-						print(f"📩 {message.author} a écrit : {message.content}")
+						print(f"[LOG] {message.author} a écrit : {message.content}")
 
 						# Appel à l'API
 						await add_data(
@@ -226,8 +229,7 @@ async def batch(ctx):
 							timestamp=message.created_at
 						)
 
-
-	await ctx.send("✅ Traitement des tweets terminé.")
+	await ctx.send("[OK] Traitement des tweets terminé.")
 
 # === LANCEMENT DU BOT ===
 
