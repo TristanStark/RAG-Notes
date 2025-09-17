@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "rag-notes"
 version = "0.1.0"
 description = "Discord bot + Twitter image scraper pushing data to a RAG backend."
-authors = [{name = "Tristan", email = "example@example.com"}]
+authors = [{name = "Tristan", email = "thomas.rety57@gmail.com"}]
 requires-python = ">=3.11"
 dependencies = [
   "discord.py>=2.3",
@@ -25,6 +25,9 @@ dev = [
   "pytest-cov>=5.0",
   "freezegun>=1.5",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
