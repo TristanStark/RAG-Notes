@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-notes"
+version = "0.1.0"
+description = "Discord bot + Twitter image scraper pushing data to a RAG backend."
+authors = [{name = "Tristan", email = "example@example.com"}]
+requires-python = ">=3.11"
+dependencies = [
+  "discord.py>=2.3",
+  "aiohttp>=3.9",
+  "python-dotenv>=1.0",
+  "requests>=2.31",
+  "playwright>=1.47",
+  "beautifulsoup4>=4.12",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.6",
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+  "pytest-cov>=5.0",
+  "freezegun>=1.5",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-q --cov=.: --cov-report=term-missing"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+select = [
+  "E",  # pycodestyle errors
+  "F",  # pyflakes
+  "I",  # import sorting
+  "B",  # flake8-bugbear
+  "UP", # pyupgrade
+]
+ignore = [
+  "E203", # whitespace before ':' (black compatibility)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

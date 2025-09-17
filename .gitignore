@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.build/
+.venv/
+venv/
+.env
+.env.*
+
+# pytest / coverage
+.pytest_cache/
+htmlcov/
+.coverage*
+
+# data
+/data/
+images/
+
+# Playwright
+playwright/.cache/
