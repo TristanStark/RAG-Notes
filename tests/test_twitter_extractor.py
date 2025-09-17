@@ -1,4 +1,4 @@
-from twitter_extractor import TwitterScraper
+from src.twitter_extractor import TwitterScraper
 
 
 def test_upgrade_twitter_image_url_sets_high_res():
