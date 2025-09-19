@@ -8,7 +8,8 @@ import aiohttp
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from twitter_extractor import TwitterScraper
+
+from rag_notes.twitter_extractor import TwitterScraper
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")

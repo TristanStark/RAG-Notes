@@ -27,10 +27,10 @@ test:
 	pytest
 
 run:
-	$(PY) bot.py
+	$(PY) -m rag_notes.bot
 
 docker-build:
 	docker build -t rag-notes:local .
 
 docker-run:
-	docker run --rm -it --env-file .env rag-notes:local
+	docker run --rm -it --env-file .env -v "$$PWD/data:/app/data" rag-notes:local
